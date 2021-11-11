@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * Cette classe permet de reconstruire les phrases à partir des morceaux fixes et
  * morceaux variables en fonction du destinataire (professeur / élève).
  * @author AlexPo
- * @version 1.1
+ * @version 1.2
  */
 public class Phrase {
 
@@ -121,7 +121,6 @@ public class Phrase {
 
         return listMorceau;
     }
-
 
     /**
      * Méthode affiche les morceaux pour le professeur, où le morceau variable

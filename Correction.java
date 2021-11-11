@@ -6,7 +6,7 @@ import java.util.ArrayList;
 /**
  * Cette classe permet de corriger la phrase entière.
  * @author AlexPo
- * @version 1.0
+ * @version 1.2
  */
 public class Correction {
 
@@ -17,7 +17,6 @@ public class Correction {
         this.phraseProf = phraseProf;
     }
 
-
     /**
      * Méthode qui corrige les réponses de l'élève
      * @return retourne une liste d'ElementCorrige
@@ -25,27 +24,26 @@ public class Correction {
     public ArrayList<ElementCorrige> corrige(Phrase phraseEleve) {
         List<String> listResultat = new ArrayList<>();
 
-        //découpage de la réponse de l'éleve en morceaux à partir des morceaux fixes du prof
+        // Découpage de la réponse de l'éleve en morceaux à partir des morceaux fixes du prof
         List<Morceau> morceauxEleve = phraseProf.analyseReponseEleve(phraseEleve.getPhrase());
         phraseEleve.setListeMorceaux(morceauxEleve);
         phraseEleve.setTypeListeMorceaux(morceauxEleve);
 
-        //recupération des morceaux variables de l'élève
-        List<MorceauVariable> morceauxVariableEleve = phraseEleve.getMorceauxVariables();
+        // Récupération des morceaux variables de l'élève
+        List<MorceauVariable> morceauxVariablesEleve = phraseEleve.getMorceauxVariables();
 
-        //boucle sur les éléments variables
-        for(int j = 0; j< morceauxVariableEleve.size(); j++){
+        // Boucle sur les éléments variables
+        for (int j = 0; j<morceauxVariablesEleve.size(); j++){
 
-            //construction d'un objet ElementCorrige avec le morceaux de l'élève et le morceaux du prof correspondant
-            ElementCorrige elemtCorr = new ElementCorrige(morceauxVariableEleve.get(j), this.phraseProf.getMorceauxVariables().get(j));
+            // Construction d'un objet ElementCorrige avec le morceaux de l'élève et le morceaux du prof correspondant
+            ElementCorrige elementCorrige = new ElementCorrige(morceauxVariablesEleve.get(j), this.phraseProf.getMorceauxVariables().get(j));
 
-            //appel de la méthode qui permet de corriger (VRAI, FAUX , NR)
-            elemtCorr.setCorrection();
+            // Appel de la méthode qui permet de corriger (VRAI, FAUX, NR)
+            elementCorrige.setCorrection();
 
-            //construction de la liste des éléments corrigés
-            this.elementsCorriges.add(elemtCorr);
+            // Construction de la liste des éléments corrigés
+            this.elementsCorriges.add(elementCorrige);
         }
-
         return this.elementsCorriges;
     }
 }

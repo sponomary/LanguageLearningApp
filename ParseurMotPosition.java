@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
  * Cette classe permet de prendre en entrée les phrases du professeur,
  * les parser et construire listes de morceaux (morceaux fixes et morceaux variables)
  * @author AlexPo
- * @version 1.0
+ * @version 1.2
  */
 public class ParseurMotPosition implements Parseur {
 
@@ -19,7 +19,6 @@ public class ParseurMotPosition implements Parseur {
         this.delimiteur = caractere;
     }
 
-    @Override
     /**
      * Méthode qui parse la phrase du prof pour la découper en morceaux
      * @return List<Morceau> (liste de morceaux de la phrase du prof)
@@ -37,13 +36,12 @@ public class ParseurMotPosition implements Parseur {
             Morceau morceauFixe = new Morceau(chaine.substring(indicePrecedent, m.start() - 1), indicePrecedent);
             listMorceau.add(morceauFixe);
 
-            // Récupérarion du morceau variable sans les # et ajout à la liste (instance de l'objet MorceauVariable)
+            // Récupération du morceau variable sans les # et ajout à la liste (instance de l'objet MorceauVariable)
             MorceauVariable morceauVar = new MorceauVariable(m.group(), m.start() - 1);
             listMorceau.add(morceauVar);
 
             indicePrecedent = m.end() + 1;
         }
-
         Morceau morceauFixe = new Morceau(chaine.substring(indicePrecedent, chaine.length()), indicePrecedent);
         listMorceau.add(morceauFixe);
 

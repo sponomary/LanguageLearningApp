@@ -3,7 +3,7 @@ package Projet;
 /**
  * Cette classe permet de corriger un élément.
  * @author AlexPo
- * @version 1.0
+ * @version 1.2
  */
 public class ElementCorrige {
 
@@ -12,7 +12,6 @@ public class ElementCorrige {
     private REPONSE correct;
 
     // STEP 1: Constructors (to update every field of a new object)
-
     public ElementCorrige(Morceau reponseEleve, Morceau reponseAttendue) {
         this.reponseEleve = reponseEleve;
         this.reponseAttendue = reponseAttendue;
@@ -44,25 +43,21 @@ public class ElementCorrige {
         this.correct = correct;
     }
 
-
     // STEP 4: Actions and other methods
-
     /**
      * Méthode qui compare les morceaux variables de l'éléve avec les morceaux variables du prof (VRAI, FAUX , NR)
-     *
      */
     public REPONSE setCorrection() {
 
-        if(reponseEleve.getChaine().equals("..."))  {
+        if (reponseEleve.getChaine().equals("..."))  {
             this.correct = REPONSE.NR;
-        }else {
+        } else {
             if (reponseEleve.getChaine().equals(reponseAttendue.getChaine())) {
                 this.correct = REPONSE.VRAI;
             } else {
                 this.correct = REPONSE.FAUX;
             }
         }
-
         return this.correct;
     }
 }

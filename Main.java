@@ -83,7 +83,6 @@ public class Main {
             for (ElementCorrige element : elementsCor) {
                 listResultat.add("(" +  element.getReponseEleve().getChaine() + ", " + element.getReponseEleve().getPosition() + " : " + element.getCorrect()+ ")");
             }
-
             System.out.println(listResultat);
         }
     }
@@ -115,7 +114,6 @@ public class Main {
         return responses;
     }
 
-
     /**
      * Méthode qui prend en entrée le fichier avec les exercices fournis par
      * professeur, le lit et stocke dans une liste de chaînes de caractères.
@@ -145,6 +143,5 @@ public class Main {
         }
         return phrases;
     }
-
 }
 

@@ -5,7 +5,7 @@ package Projet;
  * @author AlexPo
  * @version 1.1
  */
-public class MorceauVariable extends Morceau{
+public class MorceauVariable extends Morceau {
 
     public MorceauVariable(String chaine, int position) {
         this.chaine = chaine;
