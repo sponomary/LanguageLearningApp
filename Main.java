@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Application d'apprentissage des langues orientales et non-orientales.
  * @author AlexPo
- * @version 1.1
+ * @version 1.2
  */
 public class Main {
 
@@ -44,16 +44,16 @@ public class Main {
      */
     public static void printEleve(ArrayList<Phrase> listePhrasesProf) {
         // Construction d'une liste des mots manquants
-        String motsManquants = "";
+        StringBuilder motsManquants = new StringBuilder();
         for (Phrase p: listePhrasesProf) {
             for (MorceauVariable mv: p.getMorceauxVariables()) {
-                motsManquants += mv.pourReponseAttendu() + ", ";
+                motsManquants.append(mv.pourReponseAttendu()).append(", ");
             }
         }
 
         // Suppression de la virgule à la fin de la chaîne
-        if (!(motsManquants.equals(""))) {
-            motsManquants = motsManquants.substring(0, motsManquants.length() - 2);
+        if (!(motsManquants.toString().equals(""))) {
+            motsManquants = new StringBuilder(motsManquants.substring(0, motsManquants.length() - 2));
         }
 
         // Affichage
