@@ -13,7 +13,9 @@ Les approches techniques seront améliorées aux fur et à mesure des séances :
 - utilisation d’une base documentaire
 - nouveaux exercices en fonction de votre appétence
 
+![Screenshot](schema.png) 
 
+### NB: Rappel sur les collections
 |NOM|ORDONNÉE|DOUBLONS|ACCÈS DIRECT|VALEURS NULLES|THREAD-SAFE|
 |:--:|:--:|:--:|:--:|:--:|:--:|
 |**ArrayDeque**|❌|✔|❌|❌|❌|
