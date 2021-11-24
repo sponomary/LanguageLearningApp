@@ -6,12 +6,11 @@ Dans le cadre du cours Programmation Objet Java de Master 2 Traitement Automatiq
 - de permettre aux élèves de faire les exercices proposés selon leurs niveaux de corriger automatiquement l’exercice proposé.
 
 
-Les approches techniques seront améliorées aux fur et à mesure des séances : 
-- ajout d’une interface graphique
+Les approches techniques seront améliorées au fur et à mesure des séances :
 - formatage des fichiers en XML
 - mise sous forme de webservice
 - utilisation d’une base documentaire
-- nouveaux exercices en fonction de votre appétence
+- autres nouveaux exercices
 
 ![Screenshot](schema.png) 
 

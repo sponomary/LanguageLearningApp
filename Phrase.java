@@ -23,7 +23,6 @@ public class Phrase {
 
     public Phrase(String phrase) {
         this.phrase = phrase;
-        //this.parsePhraseProf('#'); Suppression afin de faire un constructeur generique reutilisable pour la phrase de l'élève
     }
 
     // STEP 2: Getter (to access field values by getting its copy)
@@ -63,10 +62,10 @@ public class Phrase {
     // STEP 4: Actions and other methods
     /**
      * Méthode qui parse la phrase du prof (découpage en morceaux)
-     * @param carParse (caractère permettant de distinguer les morceaux variables)
+     * @param delimiteur (caractère permettant de distinguer les morceaux variables)
      */
-    public void parsePhraseProf(char carParse) {
-        Parseur parsePhrase = new ParseurMotPosition(carParse);
+    public void parsePhraseProf(char delimiteur) throws Exception {
+        Parseur parsePhrase = new ParseurRegEx(delimiteur);
         this.listeMorceaux = parsePhrase.parse(this.phrase);
         this.setTypeListeMorceaux(this.listeMorceaux);
     }
@@ -75,13 +74,18 @@ public class Phrase {
      * Méthode qui repartit les morceaux dans 2 listes : morceaux fixe et morceaux variables
      * @param listeMorceaux (Liste des morceaux (fixe et variable) de la phrase)
      */
-    public void setTypeListeMorceaux(List<Morceau> listeMorceaux){
+    public void setTypeListeMorceaux(List<Morceau> listeMorceaux) throws Exception {
         for (Morceau m: listeMorceaux) {
             if (m instanceof MorceauVariable) {
                 morceauxVariables.add((MorceauVariable) m);
             } else {
                 morceauxFixes.add(m);
             }
+        }
+        if (morceauxVariables.isEmpty()) {
+            throw new Exception("ERREUR : Il faut avoir au minimum 1 morceau variable !");
+        }  else if (morceauxFixes.isEmpty()) {
+            throw new Exception("ERREUR : Il faut avoir au minimum 1 morceau fixe !");
         }
     }
 
@@ -90,41 +94,49 @@ public class Phrase {
      * @param reponseEleve (réponse de l'élève)
      * @return List<Morceau> (liste de morceaux de la phrase de l'élève)
      */
-    public List<Morceau> analyseReponseEleve(String reponseEleve) {
+    public List<Morceau> analyseReponseEleve(String reponseEleve) throws Exception {
         List<Morceau> listMorceau = new ArrayList<>();
 
-        int indexFin = 0;
-        for (int i = 0; i<morceauxFixes.size()-1; i++) {
+        int debutPosVar = 0; // début de position variable
+        int finPosVar; // fin de position variable
 
-            // Calcul de l'index de fin d'un morceau fixe
-            int indexDebut = reponseEleve.indexOf(morceauxFixes.get(i).getChaine(), indexFin);
-            indexFin = indexDebut + morceauxFixes.get(i).getChaine().length();
+        int plusLoin = 0;
 
-            // Calcul de l'index du morceau fixe suivant
-            int indexDebutSuivant = reponseEleve.indexOf(morceauxFixes.get(i + 1).getChaine(), indexFin);
+        for (Morceau m: morceauxFixes) {
+            int debutPosFixe = reponseEleve.indexOf(m.getChaine(), plusLoin);
 
-            // Récupération du morceau fixe et ajout à la liste (instance de l'objet Morceau)
-            Morceau morceauFixe = new Morceau(reponseEleve.substring(indexDebut, indexFin), indexDebut);
-            listMorceau.add(morceauFixe);
-
-            // Substring du morceau correspondant à la réponse de l'élève
-            String reponseMorceau = reponseEleve.substring(indexFin, indexDebutSuivant);
-            MorceauVariable morceauVar = new MorceauVariable(reponseMorceau, indexFin);
-            listMorceau.add(morceauVar);
+        if (debutPosFixe == -1) {
+            throw new Exception("La réponse de l'élève a été indument modifiée, morceaux fixe non trouvés : " + m + "dans" + reponseEleve);
         }
 
-        // Calcul pour le dernier morceau fixe de la phrase
-        int indexDebut = reponseEleve.indexOf(morceauxFixes.getLast().getChaine(), indexFin);
-        indexFin = indexDebut + morceauxFixes.getLast().getChaine().length();
-        Morceau morceauFixe = new Morceau(reponseEleve.substring(indexDebut, indexFin), indexDebut);
-        listMorceau.add(morceauFixe);
+        int finPosFixe = debutPosFixe + m.getChaine().length();
 
+        finPosVar = debutPosFixe; // la fin d'une position variable est le début d'une position fixe
+
+        if ((finPosVar - debutPosVar) > 0) {
+            String morceauVariable = reponseEleve.substring (debutPosVar, finPosVar);
+            MorceauVariable mv = new MorceauVariable (morceauVariable, debutPosVar);
+            listMorceau.add(mv);
+        }
+
+        Morceau mf = new Morceau (reponseEleve.substring (debutPosFixe, finPosFixe), debutPosFixe);
+        listMorceau.add(mf);
+
+        debutPosVar = finPosFixe;
+        plusLoin = finPosFixe;
+    }
+    // Vérifier le dernier Morceau
+	if (debutPosVar < reponseEleve.length()) {
+        String morceauVariable = reponseEleve.substring(debutPosVar);
+        MorceauVariable mv = new MorceauVariable(morceauVariable, debutPosVar);
+        listMorceau.add(mv);
+    }
         return listMorceau;
     }
 
     /**
      * Méthode affiche les morceaux pour le professeur, où le morceau variable
-     * est entre deux caractères-délimiteurs (normallement, les dièses #)
+     * est entre deux caractères-délimiteurs (normalement, les dièses #)
      * @return chaîne de caractères (phrase pour le professeur)
      */
     public String pourProf() {
@@ -133,7 +145,7 @@ public class Phrase {
 
     /**
      * Méthode affiche les morceaux pour l'élève, où le morceau variable
-     * est remplacé par les points de suspension (...)
+     * est remplacé par les points de suspension (…)
      * @return chaîne de caractères (phrase pour l'élève)
      */
     public String pourEleve() {

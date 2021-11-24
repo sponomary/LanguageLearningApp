@@ -13,6 +13,6 @@ public interface Parseur {
      * @param chaine à découper
      * @return liste de morceaux
      */
-    public List<Morceau> parse(String chaine);
+    List<Morceau> parse(String chaine);
 
 }

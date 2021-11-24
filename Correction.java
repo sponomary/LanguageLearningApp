@@ -21,8 +21,8 @@ public class Correction {
      * Méthode qui corrige les réponses de l'élève
      * @return retourne une liste d'ElementCorrige
      */
-    public ArrayList<ElementCorrige> corrige(Phrase phraseEleve) {
-        List<String> listResultat = new ArrayList<>();
+    public ArrayList<ElementCorrige> corrige(Phrase phraseEleve) throws Exception {
+        // List<String> listResultat = new ArrayList<>();
 
         // Découpage de la réponse de l'éleve en morceaux à partir des morceaux fixes du prof
         List<Morceau> morceauxEleve = phraseProf.analyseReponseEleve(phraseEleve.getPhrase());
@@ -35,7 +35,7 @@ public class Correction {
         // Boucle sur les éléments variables
         for (int j = 0; j<morceauxVariablesEleve.size(); j++){
 
-            // Construction d'un objet ElementCorrige avec le morceaux de l'élève et le morceaux du prof correspondant
+            // Construction d'un objet ElementCorrige avec les morceaux de l'élève et les morceaux du prof correspondant
             ElementCorrige elementCorrige = new ElementCorrige(morceauxVariablesEleve.get(j), this.phraseProf.getMorceauxVariables().get(j));
 
             // Appel de la méthode qui permet de corriger (VRAI, FAUX, NR)

@@ -47,7 +47,7 @@ public class ElementCorrige {
     /**
      * Méthode qui compare les morceaux variables de l'éléve avec les morceaux variables du prof (VRAI, FAUX , NR)
      */
-    public REPONSE setCorrection() {
+    public void setCorrection() {
 
         if (reponseEleve.getChaine().equals("..."))  {
             this.correct = REPONSE.NR;
@@ -58,6 +58,5 @@ public class ElementCorrige {
                 this.correct = REPONSE.FAUX;
             }
         }
-        return this.correct;
     }
 }

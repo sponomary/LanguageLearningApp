@@ -3,6 +3,7 @@ package Projet;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
 
 /**
  * Application d'apprentissage des langues orientales et non-orientales.
@@ -13,17 +14,23 @@ public class Main {
 
     public static void main(String[] args) {
 
-        // Lecture du fichier avec les exercices du professeur
-        ArrayList<Phrase> listePhrasesProf = lectureFichierProf("src/projet/exercices.txt", '#');
 
-        //------------------PROFESSEUR-------------------------
-        printProf(listePhrasesProf);
+        try {
+            // Lecture du fichier avec les exercices du professeur
+            ArrayList<Phrase> listePhrasesProf = lectureFichierProf("src/projet/exercices.txt", '#');
 
-        //-----------------------ÉLÈVE-------------------------
-        printEleve(listePhrasesProf);
+            //------------------PROFESSEUR-------------------------
+            printProf(listePhrasesProf);
 
-        //---------------------CORRECTION----------------------
-        printCorrection(listePhrasesProf);
+            //-----------------------ÉLÈVE-------------------------
+            printEleve(listePhrasesProf);
+
+            //---------------------CORRECTION----------------------
+            printCorrection(listePhrasesProf);
+        } catch(Exception e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
@@ -32,7 +39,7 @@ public class Main {
      */
     public static void printProf(ArrayList<Phrase> listePhrasesProf) {
 
-        System.out.println("Version du prof :");
+        System.out.println("\tVERSION DU PROFESSEUR");
         for (Phrase p : listePhrasesProf) {
             System.out.println(p.pourProf());
         }
@@ -44,21 +51,24 @@ public class Main {
      */
     public static void printEleve(ArrayList<Phrase> listePhrasesProf) {
         // Construction d'une liste des mots manquants
-        StringBuilder motsManquants = new StringBuilder();
+        ArrayList<String> motsManquants = new ArrayList<>();
         for (Phrase p: listePhrasesProf) {
             for (MorceauVariable mv: p.getMorceauxVariables()) {
-                motsManquants.append(mv.pourReponseAttendu()).append(", ");
+                motsManquants.add(mv.pourReponseAttendu());
             }
         }
-
-        // Suppression de la virgule à la fin de la chaîne
-        if (!(motsManquants.toString().equals(""))) {
-            motsManquants = new StringBuilder(motsManquants.substring(0, motsManquants.length() - 2));
-        }
+        Collections.shuffle(motsManquants);
 
         // Affichage
-        System.out.println("\n" + "Exercice de l'élève :");
-        System.out.println("Liste de mots manquants : " + motsManquants + "\n");
+        System.out.println("\n\tEXERCICE DE L'ELEVE");
+        System.out.print("Liste de mots manquants : ");
+        String separateurPrecedent = "";
+        for (Object mot : motsManquants) {
+            System.out.print(separateurPrecedent + mot);
+            separateurPrecedent = ", ";
+        }
+        System.out.print("\n");
+        // System.out.println(Arrays.toString(motsManquants.toArray())); // une autre façon d'imprimer ArrayList
         for(Phrase p : listePhrasesProf){
             System.out.println(p.pourEleve());
         }
@@ -68,12 +78,18 @@ public class Main {
      * Méthode qui prend en entrée une liste d'objets Phrase avec les exercices du professeur
      * Affichage dans la console de la correction
      */
-    public static void printCorrection(ArrayList<Phrase> listePhrasesProf) {
+    public static void printCorrection(ArrayList<Phrase> listePhrasesProf) throws Exception {
         // Lecture du fichier avec les réponses de l'élève
         ArrayList<Phrase> listeReponses = lectureReponses("src/projet/reponses.txt");
 
+        if(listePhrasesProf.size() != listeReponses.size()) {
+            throw new Exception("Le fichier réponse n'est pas complet");
+        }
+
+
+
         // Affichage des réponses de l'élève
-        System.out.println("\n" + "Correction des réponses de l'eleve : ");
+        System.out.println("\n\tCORRECTION DES REPONSES");
         for(int i = 0; i< listePhrasesProf.size(); i++) {
             Correction cor = new Correction(listePhrasesProf.get(i));
             ArrayList<ElementCorrige> elementsCor = cor.corrige(listeReponses.get(i));
@@ -102,7 +118,9 @@ public class Main {
             String ligne;
 
             while ((ligne = br.readLine()) != null) {
-                responses.add(new Phrase(ligne));
+                if (!ligne.equals("")){
+                    responses.add(new Phrase(ligne));
+                }
             }
 
             br.close();
@@ -121,7 +139,7 @@ public class Main {
      * @param carParse (caractère permettant de distinguer les morceaux variables)
      * @return liste des phrases du prof
      */
-    public static ArrayList<Phrase> lectureFichierProf(String cheminFichier, char carParse) {
+    public static ArrayList<Phrase> lectureFichierProf(String cheminFichier, char carParse) throws Exception {
         ArrayList<Phrase> phrases = new ArrayList<>();
 
         try {
@@ -130,11 +148,12 @@ public class Main {
             String ligne;
 
             while ((ligne = br.readLine()) != null) {
-                Phrase phraseProf  = new Phrase(ligne);
-                phraseProf.parsePhraseProf(carParse);
-                phrases.add(phraseProf);
+                if(!ligne.equals("")){
+                    Phrase phraseProf  = new Phrase(ligne);
+                    phraseProf.parsePhraseProf(carParse);
+                    phrases.add(phraseProf);
+                }
             }
-
             br.close();
         } catch(FileNotFoundException exc) {
             System.out.println("Erreur d'ouverture du fichier");
